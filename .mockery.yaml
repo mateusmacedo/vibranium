@@ -1,0 +1,5 @@
+with-expecter: true
+dir: "tests/mocks/{{.PackageName}}"
+all: true
+packages:
+  github.com/mateusmacedo/vibranium/specification/pkg/contract:
