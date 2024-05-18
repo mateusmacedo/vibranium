@@ -113,6 +113,59 @@ func TestSpecificationIntegration(t *testing.T) {
 				NewNotSpecification[string](createMockSpec(false)),
 			),
 		},
+		// Novos cenários
+		{
+			name:      "AllAndSpecificationsNotSatisfied",
+			candidate: "candidate",
+			expected:  false,
+			finalSpec: NewAndSpecification[string](
+				createMockSpec(false),
+				createMockSpec(false),
+				NewOrSpecification[string](
+					createMockSpec(true),
+					createMockSpec(true),
+				),
+				NewNotSpecification[string](createMockSpec(false)),
+			),
+		},
+		{
+			name:      "AllAndSpecificationsSatisfiedAndNotSpecSatisfied",
+			candidate: "candidate",
+			expected:  false,
+			finalSpec: NewAndSpecification[string](
+				createMockSpec(true),
+				createMockSpec(true),
+				NewOrSpecification[string](
+					createMockSpec(false),
+					createMockSpec(false),
+				),
+				NewNotSpecification[string](createMockSpec(true)),
+			),
+		},
+		{
+			name:      "NoAndSpecificationsAndOrSpecSatisfied",
+			candidate: "candidate",
+			expected:  true,
+			finalSpec: NewAndSpecification[string](
+				NewOrSpecification[string](
+					createMockSpec(true),
+					createMockSpec(false),
+				),
+				NewNotSpecification[string](createMockSpec(false)),
+			),
+		},
+		{
+			name:      "NoAndSpecificationsAndOrSpecNotSatisfied",
+			candidate: "candidate",
+			expected:  false,
+			finalSpec: NewAndSpecification[string](
+				NewOrSpecification[string](
+					createMockSpec(false),
+					createMockSpec(false),
+				),
+				NewNotSpecification[string](createMockSpec(false)),
+			),
+		},
 	}
 
 	for _, tt := range tests {
