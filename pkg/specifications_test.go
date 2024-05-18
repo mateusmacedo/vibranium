@@ -10,7 +10,7 @@ import (
 	mock_contract "github.com/mateusmacedo/vibranium/specification/tests/mocks/contract"
 )
 
-type specTest struct {
+type specificationIntegrationTest struct {
 	name      string
 	candidate string
 	expected  bool
@@ -18,7 +18,7 @@ type specTest struct {
 }
 
 func TestSpecificationIntegration(t *testing.T) {
-	tests := []specTest{
+	tests := []specificationIntegrationTest{
 		{
 			name:      "AllSpecificationsSatisfied",
 			candidate: "candidate",
