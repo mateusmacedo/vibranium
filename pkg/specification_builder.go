@@ -6,49 +6,58 @@ import (
 	"github.com/mateusmacedo/vibranium/specification/pkg/contract"
 )
 
-type specificationBuilder[T any] struct {
+type specificationBuilder[T contract.Candidate] struct {
 	specifications []contract.Specification[T]
 	err            error
 }
 
-func NewSpecificationBuilder[T any]() contract.SpecificationBuilder[T] {
+func NewSpecificationBuilder[T contract.Candidate]() contract.SpecificationBuilder[T] {
 	return &specificationBuilder[T]{}
 }
 
-func (b *specificationBuilder[T]) WithSpecification(spec contract.Specification[T]) contract.SpecificationBuilder[T] {
+func (b *specificationBuilder[T]) addSpecification(spec contract.Specification[T], err error) contract.SpecificationBuilder[T] {
 	if b.err != nil {
 		return b
 	}
-	if spec == nil {
-		b.err = errors.New("specification cannot be nil")
+	if err != nil {
+		b.err = err
 		return b
 	}
 	b.specifications = append(b.specifications, spec)
 	return b
 }
 
-func (b *specificationBuilder[T]) And(spec contract.Specification[T]) contract.SpecificationBuilder[T] {
-	if b.err != nil {
-		return b
-	}
+func (b *specificationBuilder[T]) WithSpecification(spec contract.Specification[T]) contract.SpecificationBuilder[T] {
 	if spec == nil {
-		b.err = errors.New("specification cannot be nil")
-		return b
+		return b.addSpecification(nil, errors.New("specification cannot be nil"))
 	}
-	b.specifications = append(b.specifications, NewAndSpecification[T](spec))
-	return b
+	return b.addSpecification(spec, nil)
+}
+
+func (b *specificationBuilder[T]) And(spec contract.Specification[T]) contract.SpecificationBuilder[T] {
+	if spec == nil {
+		return b.addSpecification(nil, errors.New("specification cannot be nil"))
+	}
+	if len(b.specifications) == 0 {
+		return b.addSpecification(nil, errors.New("no previous specification to combine with"))
+	}
+	lastSpec := b.specifications[len(b.specifications)-1]
+	combinedSpec := NewAndSpecification[T](lastSpec, spec)
+	b.specifications = b.specifications[:len(b.specifications)-1]
+	return b.addSpecification(combinedSpec, nil)
 }
 
 func (b *specificationBuilder[T]) Or(spec contract.Specification[T]) contract.SpecificationBuilder[T] {
-	if b.err != nil {
-		return b
-	}
 	if spec == nil {
-		b.err = errors.New("specification cannot be nil")
-		return b
+		return b.addSpecification(nil, errors.New("specification cannot be nil"))
 	}
-	b.specifications = append(b.specifications, NewOrSpecification[T](spec))
-	return b
+	if len(b.specifications) == 0 {
+		return b.addSpecification(NewOrSpecification[T](spec), nil)
+	}
+	lastSpec := b.specifications[len(b.specifications)-1]
+	combinedSpec := NewOrSpecification[T](lastSpec, spec)
+	b.specifications = b.specifications[:len(b.specifications)-1]
+	return b.addSpecification(combinedSpec, nil)
 }
 
 func (b *specificationBuilder[T]) Not() contract.SpecificationBuilder[T] {
