@@ -1,6 +1,6 @@
 package contract
 
-type SpecificationBuilder[T any] interface {
+type SpecificationBuilder[T Candidate] interface {
 	WithSpecification(spec Specification[T]) SpecificationBuilder[T]
 	And(spec Specification[T]) SpecificationBuilder[T]
 	Or(spec Specification[T]) SpecificationBuilder[T]
