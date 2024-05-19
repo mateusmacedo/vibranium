@@ -3,7 +3,7 @@
 package contract
 
 import (
-	contract "github.com/mateusmacedo/vibranium/specification/pkg/contract"
+	contract "github.com/mateusmacedo/vibranium/specification/contract"
 	mock "github.com/stretchr/testify/mock"
 )
 
