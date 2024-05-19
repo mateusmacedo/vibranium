@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 
-	"github.com/mateusmacedo/vibranium/specification/pkg/contract"
+	"github.com/mateusmacedo/vibranium/specification/contract"
 	mock_contract "github.com/mateusmacedo/vibranium/specification/tests/mocks/contract"
 )
 

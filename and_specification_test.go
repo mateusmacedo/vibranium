@@ -2,12 +2,12 @@
 package specification
 
 import (
-    "testing"
+	"testing"
 
-    "github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/assert"
 
-    "github.com/mateusmacedo/vibranium/specification/pkg/contract"
-    mock_contract "github.com/mateusmacedo/vibranium/specification/tests/mocks/contract"
+	"github.com/mateusmacedo/vibranium/specification/contract"
+	mock_contract "github.com/mateusmacedo/vibranium/specification/tests/mocks/contract"
 )
 
 func TestAndSpecification_IsSatisfiedBy(t *testing.T) {

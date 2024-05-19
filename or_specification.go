@@ -1,6 +1,6 @@
 package specification
 
-import "github.com/mateusmacedo/vibranium/specification/pkg/contract"
+import "github.com/mateusmacedo/vibranium/specification/contract"
 
 type OrSpecification[T contract.Candidate] struct {
     specs []contract.Specification[T]

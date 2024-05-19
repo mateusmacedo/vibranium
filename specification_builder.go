@@ -3,7 +3,7 @@ package specification
 import (
 	"errors"
 
-	"github.com/mateusmacedo/vibranium/specification/pkg/contract"
+	"github.com/mateusmacedo/vibranium/specification/contract"
 )
 
 type specificationBuilder[T contract.Candidate] struct {
