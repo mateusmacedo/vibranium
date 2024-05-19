@@ -41,9 +41,10 @@ func (b *specificationBuilder[T]) And(spec contract.Specification[T]) contract.S
 	if len(b.specifications) == 0 {
 		return b.addSpecification(nil, errors.New("no previous specification to combine with"))
 	}
-	lastSpec := b.specifications[len(b.specifications)-1]
+	lastSpecIndex := len(b.specifications) - 1
+	lastSpec := b.specifications[lastSpecIndex]
 	combinedSpec := NewAndSpecification[T](lastSpec, spec)
-	b.specifications = b.specifications[:len(b.specifications)-1]
+	b.specifications = b.specifications[:lastSpecIndex]
 	return b.addSpecification(combinedSpec, nil)
 }
 
