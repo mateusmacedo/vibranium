@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/mateusmacedo/vibranium/specification/contract"
-	mock_contract "github.com/mateusmacedo/vibranium/specification/tests/mocks/contract"
+	"github.com/mateusmacedo/vibranium/specification/mocks"
 )
 
 func TestAndSpecification_IsSatisfiedBy(t *testing.T) {
@@ -56,7 +56,7 @@ func TestAndSpecification_IsSatisfiedBy(t *testing.T) {
         t.Run(tt.name, func(t *testing.T) {
             var specs []contract.Specification[string]
             for _, specFunc := range tt.specs {
-                mockSpec := new(mock_contract.MockSpecification[string])
+                mockSpec := new(mocks.MockSpecification[string])
                 mockSpec.On("IsSatisfiedBy", tt.candidate).Return(specFunc(tt.candidate))
                 specs = append(specs, mockSpec)
             }
@@ -69,7 +69,7 @@ func TestAndSpecification_IsSatisfiedBy(t *testing.T) {
             // Assert
             assert.Equal(t, tt.expected, result)
             for _, spec := range specs {
-                spec.(*mock_contract.MockSpecification[string]).AssertExpectations(t)
+                spec.(*mocks.MockSpecification[string]).AssertExpectations(t)
             }
         })
     }

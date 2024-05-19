@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/mateusmacedo/vibranium/specification/contract"
-	mock_contract "github.com/mateusmacedo/vibranium/specification/tests/mocks/contract"
+	"github.com/mateusmacedo/vibranium/specification/mocks"
 )
 
 func TestOrSpecification_IsSatisfiedBy(t *testing.T) {
@@ -64,13 +64,13 @@ func TestOrSpecification_IsSatisfiedBy(t *testing.T) {
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
             var specs []contract.Specification[string]
-            var mocks []*mock_contract.MockSpecification[string]
+            var specmocks []*mocks.MockSpecification[string]
 
             for _, specFunc := range tt.specs {
-                mockSpec := new(mock_contract.MockSpecification[string])
+                mockSpec := new(mocks.MockSpecification[string])
                 mockSpec.On("IsSatisfiedBy", tt.candidate).Return(specFunc(tt.candidate)).Once()
                 specs = append(specs, mockSpec)
-                mocks = append(mocks, mockSpec)
+                specmocks = append(specmocks, mockSpec)
             }
 
             orSpec := NewOrSpecification[string](specs...)
@@ -82,7 +82,7 @@ func TestOrSpecification_IsSatisfiedBy(t *testing.T) {
             assert.Equal(t, tt.expected, result)
 
             // Verificar expectativas
-            for i, mock := range mocks {
+            for i, mock := range specmocks {
                 if tt.expected && i > 0 && tt.specs[i-1](tt.candidate) {
                     // Se o resultado esperado for verdadeiro e a especificação anterior retornou verdadeiro,
                     // verificamos que esta especificação não foi chamada

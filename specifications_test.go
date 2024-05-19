@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/mock"
 
 	"github.com/mateusmacedo/vibranium/specification/contract"
-	mock_contract "github.com/mateusmacedo/vibranium/specification/tests/mocks/contract"
+	"github.com/mateusmacedo/vibranium/specification/mocks"
 )
 
 type specificationIntegrationTest struct {
@@ -177,7 +177,7 @@ func TestSpecificationIntegration(t *testing.T) {
 }
 
 func createMockSpec(result bool) contract.Specification[string] {
-    mockSpec := new(mock_contract.MockSpecification[string])
+    mockSpec := new(mocks.MockSpecification[string])
     mockSpec.On("IsSatisfiedBy", mock.Anything).Return(result)
     return mockSpec
 }
