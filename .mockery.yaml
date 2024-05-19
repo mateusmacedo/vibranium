@@ -1,5 +1,12 @@
 with-expecter: true
-dir: "tests/mocks/{{.PackageName}}"
-all: true
+outpkg: mocks
+dir: mocks
 packages:
-  github.com/mateusmacedo/vibranium/specification/pkg/contract:
+  github.com/mateusmacedo/vibranium/specification/contract:
+        # place your package-specific config here
+        config:
+        interfaces:
+            # select the interfaces you want mocked
+            Specification:
+                # Modify package-level config for this specific interface (if applicable)
+                config:
