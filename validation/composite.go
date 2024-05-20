@@ -3,23 +3,27 @@ package validation
 import "github.com/mateusmacedo/vibranium/validation/contract"
 
 type Composite[T any] struct {
-    validators []contract.Validator[T]
+    validators []WithContext[T]
+}
+
+type WithContext[T any] struct {
+    Context   string
+    Validator contract.Validator[T]
 }
 
 func NewComposite[T any]() *Composite[T] {
-    return &Composite[T]{validators: []contract.Validator[T]{}}
+    return &Composite[T]{validators: []WithContext[T]{}}
 }
 
-func (c *Composite[T]) Add(validator contract.Validator[T]) *Composite[T] {
-    c.validators = append(c.validators, validator)
-    return c
+func (cv *Composite[T]) Add(context string, validator contract.Validator[T]) {
+    cv.validators = append(cv.validators, WithContext[T]{Context: context, Validator: validator})
 }
 
-func (c *Composite[T]) Validate(value T) error {
+func (cv *Composite[T]) Validate(value T) error {
     errors := &Errors{}
-    for _, validator := range c.validators {
-        if err := validator.Validate(value); err != nil {
-            errors.Add(err)
+    for _, vc := range cv.validators {
+        if err := vc.Validator.Validate(value); err != nil {
+            errors.Add(vc.Context, err)
         }
     }
     if errors.IsEmpty() {
