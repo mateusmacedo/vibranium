@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/mateusmacedo/vibranium/validation/contract"
+	"github.com/mateusmacedo/vibranium/validation/errors"
 )
 
 type Collection[T any] struct {
@@ -14,17 +15,20 @@ func NewCollection[T any](itemValidator contract.Validator[T]) *Collection[T] {
     return &Collection[T]{itemValidator: itemValidator}
 }
 
-func (cv *Collection[T]) Validate(items []T) error {
-    errors := &Errors{}
+func (c *Collection[T]) Validate(items []T) error {
+    errs := &errors.Errors{}
     for i, item := range items {
-        if err := cv.itemValidator.Validate(item); err != nil {
+        if err := c.itemValidator.Validate(item); err != nil {
             context := fmt.Sprintf("Item %d", i)
-            indentedError := IndentErrorMessages(err.Error(), "  ")
-            errors.Add(context, fmt.Errorf("%s", indentedError))
+            if vErrs, ok := err.(*errors.Errors); ok {
+                errs.Add(context, vErrs)
+            } else {
+                errs.Add(context, err)
+            }
         }
     }
-    if errors.IsEmpty() {
+    if errs.IsEmpty() {
         return nil
     }
-    return errors
+    return errs
 }
