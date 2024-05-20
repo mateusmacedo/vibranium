@@ -2,6 +2,7 @@ package presenter
 
 import (
 	"encoding/xml"
+	"strings"
 
 	"github.com/mateusmacedo/vibranium/validation/errors"
 )
@@ -13,13 +14,21 @@ func (p *XMLPresenter) Present(errors *errors.Errors) string {
         Context string `xml:"context"`
         Error   string `xml:"error"`
     }
-    var result []XMLError
+
+    errorMap := make(map[string][]string)
     for _, err := range errors.List {
+        context := err.Context
+        errorMap[context] = append(errorMap[context], err.Err.Error())
+    }
+
+    var result []XMLError
+    for context, errs := range errorMap {
         result = append(result, XMLError{
-            Context: err.Context,
-            Error:   err.Err.Error(),
+            Context: context,
+            Error:   strings.Join(errs, ";\n"),
         })
     }
+
     xmlData, _ := xml.MarshalIndent(result, "", "  ")
     return string(xmlData)
 }

@@ -24,7 +24,13 @@ func (e *Errors) Error() string {
 }
 
 func (e *Errors) Add(context string, err error) {
-    e.List = append(e.List, Error{Context: context, Err: err})
+    if nestedErrors, ok := err.(*Errors); ok {
+        for _, nestedErr := range nestedErrors.List {
+            e.List = append(e.List, Error{Context: context + "." + nestedErr.Context, Err: nestedErr.Err})
+        }
+    } else {
+        e.List = append(e.List, Error{Context: context, Err: err})
+    }
 }
 
 func (e *Errors) IsEmpty() bool {

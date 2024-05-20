@@ -11,7 +11,7 @@ func NewBuilder[T any]() *Builder[T] {
 }
 
 func (b *Builder[T]) Add(context string, validator contract.Validator[T]) *Builder[T] {
-    b.composite.Add(context, validator)
+    b.composite.AddValidator(context, validator)
     return b
 }
 

@@ -6,20 +6,20 @@ import (
 )
 
 type Composite[T any] struct {
-    validators []WithContext[T]
+    validators []ValidatorWithContext[T]
 }
 
-type WithContext[T any] struct {
+type ValidatorWithContext[T any] struct {
     Context   string
     Validator contract.Validator[T]
 }
 
 func NewComposite[T any]() *Composite[T] {
-    return &Composite[T]{validators: []WithContext[T]{}}
+    return &Composite[T]{validators: []ValidatorWithContext[T]{}}
 }
 
-func (c *Composite[T]) Add(context string, validator contract.Validator[T]) {
-    c.validators = append(c.validators, WithContext[T]{Context: context, Validator: validator})
+func (c *Composite[T]) AddValidator(context string, validator contract.Validator[T]) {
+    c.validators = append(c.validators, ValidatorWithContext[T]{Context: context, Validator: validator})
 }
 
 func (c *Composite[T]) Validate(value T) error {

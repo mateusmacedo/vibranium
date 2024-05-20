@@ -20,11 +20,7 @@ func (c *Collection[T]) Validate(items []T) error {
     for i, item := range items {
         if err := c.itemValidator.Validate(item); err != nil {
             context := fmt.Sprintf("Item %d", i)
-            if vErrs, ok := err.(*errors.Errors); ok {
-                errs.Add(context, vErrs)
-            } else {
-                errs.Add(context, err)
-            }
+            errs.Add(context, err)
         }
     }
     if errs.IsEmpty() {

@@ -40,13 +40,13 @@ func NewUserValidator() *UserValidator {
 
     // Compondo validações para PhoneNumber
     phoneNumberValidator := validation.NewComposite[PhoneNumber]()
-    phoneNumberValidator.Add("Number", contract.ValidationFunc[PhoneNumber](func(phone PhoneNumber) error {
+    phoneNumberValidator.AddValidator("Number", contract.ValidationFunc[PhoneNumber](func(phone PhoneNumber) error {
         return validators.StringNonEmpty{}.Validate(phone.Number)
     }))
-    phoneNumberValidator.Add("Number", contract.ValidationFunc[PhoneNumber](func(phone PhoneNumber) error {
+    phoneNumberValidator.AddValidator("Number", contract.ValidationFunc[PhoneNumber](func(phone PhoneNumber) error {
         return validators.DigitsOnly{}.Validate(phone.Number)
     }))
-    phoneNumberValidator.Add("Number", contract.ValidationFunc[PhoneNumber](func(phone PhoneNumber) error {
+    phoneNumberValidator.AddValidator("Number", contract.ValidationFunc[PhoneNumber](func(phone PhoneNumber) error {
         return validators.ExactLength{Length: 10}.Validate(phone.Number)
     }))
 
