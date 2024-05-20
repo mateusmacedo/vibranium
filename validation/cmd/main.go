@@ -38,35 +38,35 @@ func NewUserValidator() *UserValidator {
 
     // Compondo validações para PhoneNumber
     phoneNumberValidator := validation.NewComposite[PhoneNumber]()
-    phoneNumberValidator.Add(contract.ValidatorFunc[PhoneNumber](func(phone PhoneNumber) error {
+    phoneNumberValidator.Add("Number", contract.ValidationFunc[PhoneNumber](func(phone PhoneNumber) error {
         return validators.StringNonEmpty{}.Validate(phone.Number)
     }))
-    phoneNumberValidator.Add(contract.ValidatorFunc[PhoneNumber](func(phone PhoneNumber) error {
+    phoneNumberValidator.Add("Number", contract.ValidationFunc[PhoneNumber](func(phone PhoneNumber) error {
         return validators.DigitsOnly{}.Validate(phone.Number)
     }))
-    phoneNumberValidator.Add(contract.ValidatorFunc[PhoneNumber](func(phone PhoneNumber) error {
+    phoneNumberValidator.Add("Number", contract.ValidationFunc[PhoneNumber](func(phone PhoneNumber) error {
         return validators.ExactLength{Length: 10}.Validate(phone.Number)
     }))
 
     collectionPhoneValidator := validation.NewCollection(phoneNumberValidator)
 
     builder := validation.NewBuilder[User]().
-        Add(contract.ValidatorFunc[User](func(user User) error {
+        Add("Name", contract.ValidationFunc[User](func(user User) error {
             return nameValidator.Validate(user.Name)
         })).
-        Add(contract.ValidatorFunc[User](func(user User) error {
+        Add("Age", contract.ValidationFunc[User](func(user User) error {
             return ageValidator.Validate(user.Age)
         })).
-        Add(contract.ValidatorFunc[User](func(user User) error {
+        Add("Address.Street", contract.ValidationFunc[User](func(user User) error {
             return streetValidator.Validate(user.Address.Street)
         })).
-        Add(contract.ValidatorFunc[User](func(user User) error {
+        Add("Address.City", contract.ValidationFunc[User](func(user User) error {
             return cityValidator.Validate(user.Address.City)
         })).
-        Add(contract.ValidatorFunc[User](func(user User) error {
+        Add("Address.Zip", contract.ValidationFunc[User](func(user User) error {
             return zipValidator.Validate(user.Address.Zip)
         })).
-        Add(contract.ValidatorFunc[User](func(user User) error {
+        Add("PhoneNumbers", contract.ValidationFunc[User](func(user User) error {
             return collectionPhoneValidator.Validate(user.PhoneNumbers)
         }))
 
