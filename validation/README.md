@@ -53,6 +53,12 @@ You can run the tests using the provided Makefile:
 make test
 ```
 
+You can also run the tests with coverage:
+
+```sh
+make coverage
+```
+
 ### Example
 
 Here is an example of how to use the validation framework:
