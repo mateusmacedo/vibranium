@@ -1,0 +1,11 @@
+with-expecter: true
+outpkg: mocks
+dir: mocks
+packages:
+  github.com/mateusmacedo/vibranium/validation/contract:
+        config:
+        interfaces:
+            Validator:
+                config:
+            Presenter:
+                config:
