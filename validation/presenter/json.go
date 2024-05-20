@@ -1,33 +1,35 @@
 package presenter
 
 import (
-    "encoding/json"
+	"encoding/json"
+	"strings"
 
-    "github.com/mateusmacedo/vibranium/validation/errors"
+	"github.com/mateusmacedo/vibranium/validation/errors"
 )
 
 type JSONPresenter struct{}
 
 func (p *JSONPresenter) Present(errors *errors.Errors) string {
-    type ErrorMessage struct {
-        Field  string   `json:"field"`
-        Errors []string `json:"errors"`
-    }
+	result := make(map[string]interface{})
 
-    errorMap := make(map[string][]string)
-    for _, err := range errors.List {
-        field := err.Field
-        errorMap[field] = append(errorMap[field], err.Err.Error())
-    }
+	for _, err := range errors.List {
+		fields := strings.Split(err.Field, ".")
+		current := result
+		for i, field := range fields {
+			if i == len(fields)-1 {
+				if current[field] == nil {
+					current[field] = []string{}
+				}
+				current[field] = append(current[field].([]string), err.Err)
+			} else {
+				if current[field] == nil {
+					current[field] = make(map[string]interface{})
+				}
+				current = current[field].(map[string]interface{})
+			}
+		}
+	}
 
-    var result []ErrorMessage
-    for field, errs := range errorMap {
-        result = append(result, ErrorMessage{
-            Field:  field,
-            Errors: errs,
-        })
-    }
-
-    jsonData, _ := json.Marshal(result)
-    return string(jsonData)
+	jsonData, _ := json.MarshalIndent(result, "", "  ")
+	return string(jsonData)
 }
