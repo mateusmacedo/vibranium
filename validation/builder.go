@@ -3,18 +3,18 @@ package validation
 import "github.com/mateusmacedo/vibranium/validation/contract"
 
 type Builder[T any] struct {
-    compositeValidator *Composite[T]
+    composite *Composite[T]
 }
 
 func NewBuilder[T any]() *Builder[T] {
-    return &Builder[T]{compositeValidator: NewComposite[T]()}
+    return &Builder[T]{composite: NewComposite[T]()}
 }
 
-func (vb *Builder[T]) Add(context string, validator contract.Validator[T]) *Builder[T] {
-    vb.compositeValidator.Add(context, validator)
-    return vb
+func (b *Builder[T]) Add(context string, validator contract.Validator[T]) *Builder[T] {
+    b.composite.Add(context, validator)
+    return b
 }
 
-func (vb *Builder[T]) Build() *Composite[T] {
-    return vb.compositeValidator
+func (b *Builder[T]) Build() *Composite[T] {
+    return b.composite
 }
