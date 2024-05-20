@@ -1,22 +1,34 @@
-# Variáveis
+# Variables
 TIMEOUT = 30s
 COVERAGE_PROFILE = coverage.out
 TAGS = wireinject
+EXCLUDE_PATTERN = "mocks|contract"
+TMP_DIR := $(shell mktemp -d)
 
-# Alvo padrão
+# Default target
 all: test
 
-# Alvo para rodar testes
+# Target for running tests
 test:
 	@echo "Running tests..."
-	@go list -f '{{.Dir}}' ./... | grep -v '/test' | xargs -I {} sh -c 'if find {} -name "*_test.go" | grep -q .; then go test -tags $(TAGS) -failfast -timeout=$(TIMEOUT) -count=1 -cover -coverprofile=$(COVERAGE_PROFILE) -race {}; fi'
+	@trap 'rm -rf $(TMP_DIR)' EXIT  # Ensure cleanup happens on script exit
+	@echo "mode: atomic" > $(COVERAGE_PROFILE)  # Initialize the coverage profile
+	@go list ./... | grep -vE $(EXCLUDE_PATTERN) | while read pkg; do \
+		mkdir -p $(TMP_DIR)/$$pkg; \
+		go test -tags $(TAGS) -failfast -timeout=$(TIMEOUT) -count=1 -covermode=atomic -coverprofile=$(TMP_DIR)/$$pkg/coverage.out -race $$pkg; \
+		if [ -f $(TMP_DIR)/$$pkg/coverage.out ]; then \
+			cat $(TMP_DIR)/$$pkg/coverage.out | grep -v "mode: atomic" >> $(COVERAGE_PROFILE); \
+			rm -rf $(TMP_DIR)/$$pkg; \
+		fi; \
+	done
 
-# Alvo para cobertura de código
-coverage:
+# Target for code coverage
+coverage: test
 	@echo "Generating coverage report..."
 	@go tool cover -html=$(COVERAGE_PROFILE)
 
-# Limpeza
+# Cleanup
 clean:
 	@echo "Cleaning up..."
 	@rm -f $(COVERAGE_PROFILE)
+	@rm -rf $(TMP_DIR)
