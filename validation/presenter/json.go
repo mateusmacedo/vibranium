@@ -10,20 +10,20 @@ type JSONPresenter struct{}
 
 func (p *JSONPresenter) Present(errors *errors.Errors) string {
 	type ErrorMessage struct {
-		Context string   `json:"context"`
+		Field string   `json:"field"`
 		Errors  []string `json:"errors"`
 	}
 
 	errorMap := make(map[string][]string)
 	for _, err := range errors.List {
-		context := err.Context
-		errorMap[context] = append(errorMap[context], err.Err.Error())
+		field := err.Field
+		errorMap[field] = append(errorMap[field], err.Err.Error())
 	}
 
 	var result []ErrorMessage
-	for context, errs := range errorMap {
+	for field, errs := range errorMap {
 		result = append(result, ErrorMessage{
-			Context: context,
+			Field: field,
 			Errors:  errs,
 		})
 	}

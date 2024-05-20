@@ -3,12 +3,12 @@ package errors
 import "strings"
 
 type Error struct {
-    Context string
+    Field string
     Err     error
 }
 
 func (e *Error) Error() string {
-    return e.Context + ": " + e.Err.Error()
+    return e.Field + ": " + e.Err.Error()
 }
 
 type Errors struct {
@@ -23,13 +23,13 @@ func (e *Errors) Error() string {
     return strings.Join(errorMessages, ";\n")
 }
 
-func (e *Errors) Add(context string, err error) {
+func (e *Errors) Add(field string, err error) {
     if nestedErrors, ok := err.(*Errors); ok {
         for _, nestedErr := range nestedErrors.List {
-            e.List = append(e.List, Error{Context: context + "." + nestedErr.Context, Err: nestedErr.Err})
+            e.List = append(e.List, Error{Field: field + "." + nestedErr.Field, Err: nestedErr.Err})
         }
     } else {
-        e.List = append(e.List, Error{Context: context, Err: err})
+        e.List = append(e.List, Error{Field: field, Err: err})
     }
 }
 

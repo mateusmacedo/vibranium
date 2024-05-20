@@ -10,20 +10,20 @@ type XMLPresenter struct{}
 
 func (p *XMLPresenter) Present(errors *errors.Errors) string {
 	type XMLError struct {
-		Context string   `xml:"context"`
+		Field string   `xml:"field"`
 		Errors  []string `xml:"error"`
 	}
 
 	errorMap := make(map[string][]string)
 	for _, err := range errors.List {
-		context := err.Context
-		errorMap[context] = append(errorMap[context], err.Err.Error())
+		field := err.Field
+		errorMap[field] = append(errorMap[field], err.Err.Error())
 	}
 
 	var result []XMLError
-	for context, errs := range errorMap {
+	for field, errs := range errorMap {
 		result = append(result, XMLError{
-			Context: context,
+			Field: field,
 			Errors:  errs,
 		})
 	}
