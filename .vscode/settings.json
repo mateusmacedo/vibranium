@@ -1,3 +1,10 @@
 {
-    "CodeGPT.apiKey": "OpenAI"
+    "go.testFlags": [
+        "-v",
+        "-count=1",
+        "-cover",
+        "-covermode=count",
+        "-failfast",
+        "-timeout=30s"
+    ]
 }
