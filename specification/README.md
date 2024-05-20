@@ -26,14 +26,19 @@ To install the project, you need to have [Go](https://golang.org/doc/install) in
 ### Steps
 
 1. Clone the repository:
+
     ```sh
     git clone https://github.com/mateusmacedo/vibranium.git
     ```
+
 2. Navigate to the project directory:
+
     ```sh
     cd vibranium/specification
     ```
+
 3. Install dependencies:
+
     ```sh
     go mod tidy
     ```
@@ -43,6 +48,7 @@ To install the project, you need to have [Go](https://golang.org/doc/install) in
 ### Running Tests
 
 You can run the tests using the provided Makefile:
+
 ```sh
 make test
 ```
@@ -94,18 +100,24 @@ Contributions are welcome! Please follow these steps to contribute:
 
 1. Fork the repository.
 2. Create a new branch:
+
     ```sh
     git checkout -b feature/your-feature
     ```
+
 3. Make your changes.
 4. Commit your changes:
+
     ```sh
     git commit -m 'Add some feature'
     ```
+
 5. Push to the branch:
+
     ```sh
     git push origin feature/your-feature
     ```
+
 6. Open a pull request.
 
 ### Code of Conduct
