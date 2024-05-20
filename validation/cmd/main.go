@@ -5,6 +5,8 @@ import (
 
 	"github.com/mateusmacedo/vibranium/validation"
 	"github.com/mateusmacedo/vibranium/validation/contract"
+	"github.com/mateusmacedo/vibranium/validation/errors"
+	"github.com/mateusmacedo/vibranium/validation/presenter"
 	"github.com/mateusmacedo/vibranium/validation/validators"
 )
 
@@ -80,7 +82,7 @@ func (uv *UserValidator) Validate(user User) error {
 func main() {
     userValidator := NewUserValidator()
 
-    // Exemplo de usuário
+    // Exemplo de usuário válido
     user := User{
         Name: "John",
         Age:  30,
@@ -95,9 +97,11 @@ func main() {
         },
     }
 
-    // Valida o usuário
+    // Valida o usuário válido
     if err := userValidator.Validate(user); err != nil {
-        fmt.Println("Validation errors:", err)
+        presenter := &presenter.JSONPresenter{}
+        fmt.Println("Validation errors:")
+        fmt.Println(presenter.Present(err.(*errors.Errors)))
     } else {
         fmt.Println("User is valid")
     }
@@ -119,7 +123,9 @@ func main() {
 
     // Valida o usuário inválido
     if err := userValidator.Validate(invalidUser); err != nil {
-        fmt.Println("Validation errors:", err)
+        presenter := &presenter.JSONPresenter{}
+        fmt.Println("Validation errors:")
+        fmt.Println(presenter.Present(err.(*errors.Errors)))
     } else {
         fmt.Println("User is valid")
     }
