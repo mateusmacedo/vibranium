@@ -1,17 +1,14 @@
-package validation
+package errors
 
-import (
-	"fmt"
-	"strings"
-)
+import "strings"
 
 type Error struct {
     Context string
     Err     error
 }
 
-func (ve *Error) Error() string {
-    return fmt.Sprintf("%s: %s", ve.Context, ve.Err.Error())
+func (e *Error) Error() string {
+    return e.Context + ": " + e.Err.Error()
 }
 
 type Errors struct {
@@ -32,12 +29,4 @@ func (e *Errors) Add(context string, err error) {
 
 func (e *Errors) IsEmpty() bool {
     return len(e.List) == 0
-}
-
-func IndentErrorMessages(errorMessages string, indent string) string {
-    lines := strings.Split(errorMessages, ";\n")
-    for i, line := range lines {
-        lines[i] = indent + line
-    }
-    return strings.Join(lines, ";\n")
 }
