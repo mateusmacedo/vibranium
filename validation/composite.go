@@ -1,6 +1,9 @@
 package validation
 
-import "github.com/mateusmacedo/vibranium/validation/contract"
+import (
+	"github.com/mateusmacedo/vibranium/validation/contract"
+	"github.com/mateusmacedo/vibranium/validation/errors"
+)
 
 type Composite[T any] struct {
     validators []WithContext[T]
@@ -15,19 +18,19 @@ func NewComposite[T any]() *Composite[T] {
     return &Composite[T]{validators: []WithContext[T]{}}
 }
 
-func (cv *Composite[T]) Add(context string, validator contract.Validator[T]) {
-    cv.validators = append(cv.validators, WithContext[T]{Context: context, Validator: validator})
+func (c *Composite[T]) Add(context string, validator contract.Validator[T]) {
+    c.validators = append(c.validators, WithContext[T]{Context: context, Validator: validator})
 }
 
-func (cv *Composite[T]) Validate(value T) error {
-    errors := &Errors{}
-    for _, vc := range cv.validators {
+func (c *Composite[T]) Validate(value T) error {
+    errs := &errors.Errors{}
+    for _, vc := range c.validators {
         if err := vc.Validator.Validate(value); err != nil {
-            errors.Add(vc.Context, err)
+            errs.Add(vc.Context, err)
         }
     }
-    if errors.IsEmpty() {
+    if errs.IsEmpty() {
         return nil
     }
-    return errors
+    return errs
 }
