@@ -4,7 +4,7 @@ import "strings"
 
 type Error struct {
     Field string
-    Err     error
+    Err   error
 }
 
 func (e *Error) Error() string {
