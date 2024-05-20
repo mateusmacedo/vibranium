@@ -15,10 +15,10 @@ type XMLError struct {
 
 type XMLPresenter struct{}
 
-func (p *XMLPresenter) Present(errors *errors.Errors) string {
+func (p *XMLPresenter) Present(errs *errors.Errors) string {
 	result := make(map[string]interface{})
 
-	for _, err := range errors.List {
+	for _, err := range errs.List {
 		fields := strings.Split(err.Field, ".")
 		current := result
 		for i, field := range fields {
@@ -54,8 +54,4 @@ func convertToXMLError(data map[string]interface{}) XMLError {
 		}
 	}
 	return result
-}
-
-func escapeXMLName(name string) string {
-	return strings.ReplaceAll(strings.ReplaceAll(name, "[", ""), "]", "")
 }
